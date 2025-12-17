@@ -5,7 +5,7 @@ import re
 import scipy.io
 import scipy.ndimage
 import optimization
-import plots_functions
+import utilities
 from sum_coordination import *
 import DoubleGaussian
 
@@ -98,19 +98,19 @@ def plot_EPR_SPAD():
     P_avg_sigma_l1, _, _, _, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autocorr_opt, window_size=window_size, show=False, SPAD=True)
 
 
-    sigma_pos_m, sigma_mom_rad_per_m = plots_functions.convert_pixel_units(P_avg_sigma, K_avg_sigma,
+    sigma_pos_m, sigma_mom_rad_per_m = utilities.convert_pixel_units(P_avg_sigma, K_avg_sigma,
                                                                           pixel_size_m=150e-6, wavelength_m=694e-9,
                                                                           focal_length_m=200e-3, M=(100/35, 300/35))
-    sigma_pos_m_l1, sigma_mom_rad_per_m_l1 = plots_functions.convert_pixel_units(P_avg_sigma_l1, K_avg_sigma_l1,
+    sigma_pos_m_l1, sigma_mom_rad_per_m_l1 = utilities.convert_pixel_units(P_avg_sigma_l1, K_avg_sigma_l1,
                                                                                 pixel_size_m=150e-6, wavelength_m=694e-9,
                                                                                 focal_length_m=200e-3, M=(100/35, 300/35))
 
     # Heisenberg EPR product (unitless, ~ hbar = 1)
-    epr_product, _ = plots_functions.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
-    epr_product_l1, _ = plots_functions.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
+    epr_product, _ = utilities.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
+    epr_product_l1, _ = utilities.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
 
-    d, _ = plots_functions.dim_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
-    d_l1, _ = plots_functions.dim_calc(sigma_pos_m_l1, sigma_mom_rad_per_m_l1, 0, 0)
+    d, _ = utilities.dim_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
+    d_l1, _ = utilities.dim_calc(sigma_pos_m_l1, sigma_mom_rad_per_m_l1, 0, 0)
 
     print(f'EPR = {epr_product} with dimensional witness {d}')
     print(f'EPR_l1 = {epr_product_l1} with dimensional witness {d_l1}')
