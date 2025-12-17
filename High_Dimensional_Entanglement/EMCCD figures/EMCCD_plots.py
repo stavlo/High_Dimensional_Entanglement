@@ -7,7 +7,7 @@ import DoubleGaussian
 import re
 import pickle
 import optimization
-from plots_functions import dataset_creation, epr_calc, dim_calc, convert_pixel_units
+from utilities import dataset_creation, epr_calc, dim_calc, convert_pixel_units
 
 def plot_sum_coordination(folder_path, file_name, load_if_exists=True):
     save_path = os.path.join(folder_path, file_name)
@@ -176,9 +176,10 @@ def plot_SNR(folder_path, file_name):
 if __name__ == "__main__":
     folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/FarField'
     folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/NearField'
+    dataset = 'l1_total_corr_wandb_window_100i_3.pkl'
 
-    # plot_sum_coordination(folder_path_K, 'l1_total_corr_wandb_window_100i_3.pkl')
-    # plot_sum_coordination(folder_path_P, 'l1_total_corr_wandb_window_100i_3.pkl')
-    plot_EPR_from_folder(folder_path_K, folder_path_P, 'l1_total_corr_wandb_window_100i_3.pkl', 'l1_total_corr_wandb_window_100i_3.pkl')
-    plot_SNR(folder_path_K, 'l1_total_corr_wandb_window_100i_3.pkl')
-    plot_SNR(folder_path_P, 'l1_total_corr_wandb_window_100i_3.pkl')
+    plot_sum_coordination(folder_path_K, dataset)
+    plot_sum_coordination(folder_path_P, dataset)
+    plot_EPR_from_folder(folder_path_K, folder_path_P, dataset, dataset)
+    plot_SNR(folder_path_K, dataset)
+    plot_SNR(folder_path_P, dataset)
