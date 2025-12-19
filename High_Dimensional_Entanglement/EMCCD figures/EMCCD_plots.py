@@ -1,12 +1,7 @@
 import matplotlib.pyplot as plt
-import scipy.io
-import scipy.ndimage
 from I4D_Edit import *
-from sum_coordination import convolution_reader, correlation_reader
-import DoubleGaussian
 import re
 import pickle
-import optimization
 from utilities import dataset_creation, epr_calc, dim_calc, convert_pixel_units
 
 def plot_sum_coordination(folder_path, file_name, load_if_exists=True):
