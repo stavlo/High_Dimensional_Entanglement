@@ -89,6 +89,8 @@ def plot_EPR_from_folder(folder_path_K, folder_path_P, file_name_K, file_name_P)
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
+    plt.ylim(-1.0, 2.0)
+
     plt.show(block=False)
 
     sigma_pos_m, sigma_mom_rad_per_m = convert_pixel_units(sigma_array_P, sigma_array_K[:], pixel_size_m=13e-6, wavelength_m=808e-9, focal_length_m=100e-3)
@@ -119,6 +121,7 @@ def plot_EPR_from_folder(folder_path_K, folder_path_P, file_name_K, file_name_P)
     plt.legend(fontsize=12)
     plt.grid(True)
     plt.tight_layout()
+    plt.ylim(-1.0, 10.0)
     plt.show()
 
     # Plot dimensionality d with error bars
@@ -131,6 +134,7 @@ def plot_EPR_from_folder(folder_path_K, folder_path_P, file_name_K, file_name_P)
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
+    plt.ylim(0.0, 11.0)
     plt.show()
 
     return d
@@ -174,12 +178,12 @@ def plot_SNR(folder_path, file_name):
 
 
 if __name__ == "__main__":
-    folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/FarField'
-    folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/NearField'
-    dataset = 'l1_total_corr_wandb_window_100i_3.pkl'
+    folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/exp_final/FarField'
+    folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/exp_final/NearField'
+    dataset = 'l1_total_corr_wandb_window_100i_6.pkl'
 
-    plot_sum_coordination(folder_path_K, dataset)
-    plot_sum_coordination(folder_path_P, dataset)
+    # plot_sum_coordination(folder_path_K, dataset)
+    # plot_sum_coordination(folder_path_P, dataset)
     plot_EPR_from_folder(folder_path_K, folder_path_P, dataset, dataset)
-    plot_SNR(folder_path_K, dataset)
-    plot_SNR(folder_path_P, dataset)
+    # plot_SNR(folder_path_K, dataset)
+    # plot_SNR(folder_path_P, dataset)

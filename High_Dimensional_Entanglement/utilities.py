@@ -26,7 +26,7 @@ def dim_calc(sigma_pos_m, sigma_mom_rad_per_m, sigma_pos_m_err, sigma_mom_rad_pe
         (sigma_mom_rad_per_m_err / (sigma_pos_m * sigma_mom_rad_per_m ** 2)) ** 2) / np.exp(1)
     return d, d_err
 
-def dataset_creation(folder_path, file_name, load_if_exists=True, proj='sum',window=None):
+def dataset_creation(folder_path, file_name, load_if_exists=True, proj='sum',window=500):
     save_path = os.path.join(folder_path, file_name)
     S = []
     Sl1 = []
@@ -87,15 +87,18 @@ def dataset_creation(folder_path, file_name, load_if_exists=True, proj='sum',win
                 autoconv = convolution_reader(I4D_window, Rd, vecimage)
             else:
                 autoconv_l1 = correlation_reader(opt_I4D_K, Rd)
-                autoconv = correlation_reader(I4D_K, Rd)
+                autoconv = correlation_reader(I4D_window, Rd)
             try:
                 avg_sigma, _, _, err, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autoconv, window_size=window, show=False)
-                avg_sigma_l1, _, _, err_l1, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autoconv_l1, window_size=window,
-                                                                                       show=False)
             except:
                 print(f'Gaussian fit failed for {fname}')
-                avg_sigma, avg_sigma_l1 = 0, 0
-                err, err_l1 = 0, 0
+                avg_sigma, err = 0, 0
+            try:
+                avg_sigma_l1, _, _, err_l1, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autoconv_l1, window_size=window,
+                                                                                           show=False)
+            except:
+                print(f'Gaussian fit failed for {fname} L1')
+                avg_sigma_l1, err_l1 = 0, 0
             S.append(avg_sigma)
             S_err.append(err)
             Sl1.append(avg_sigma_l1)
@@ -148,14 +151,14 @@ def convert_pixel_units(sigma_pos_pix, sigma_mom_pix,pixel_size_m=16e-6, wavelen
     return sigma_pos_m, sigma_mom_rad_per_m
 
 if __name__ == "__main__":
-    # folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/exp1/NearField/paper_data'
-    # folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/exp1/FarField/paper_data'
+    folder_path_P = r"C:\Users\lotanstav\Desktop\Hugo_888_code\exp_final\NearField"
+    folder_path_K = r"C:\Users\lotanstav\Desktop\Hugo_888_code\exp_final\FarField"
 
-    # # dataset pass
-    folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/FarField'
-    folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/NearField'
+    # # # dataset pass
+    # folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/FarField'
+    # folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/NearField'
 
     # creating the dataset from covariance matrices
-    dataset_creation(folder_path_K, 'l1_total_corr_wandb_window_100i_3.pkl', load_if_exists=True, proj='sum')
     dataset_creation(folder_path_P, 'l1_total_corr_wandb_window_100i_3.pkl', load_if_exists=True, proj='minus')
+    dataset_creation(folder_path_K, 'l1_total_corr_wandb_window_100i_3.pkl', load_if_exists=True, proj='sum')
 
