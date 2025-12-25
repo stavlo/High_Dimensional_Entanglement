@@ -18,7 +18,7 @@ def extract_number(filename):
 def plot_SPAD_visibility():
     folder_path_K = 'npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
-    Nset = 0 # 0 = autoconv, 1 = autocorr
+    Nset = 0 # 0 = autocorr, 1 = autocorr
     DXW, DYW = 32, 64
     vecimage = np.linspace(0, DYW * DXW, DYW * DXW + 1)
     Rd = np.zeros((DXW, DYW))
@@ -27,10 +27,12 @@ def plot_SPAD_visibility():
     I4D_K = cov_mat['I4D_final']
     I4D_K_opt, loss_list = optimization.optimize_x(I4D_K, 1e-5, 0.0,learning_rate=10 ** -4.5 ,max_iter=50, upper_triangular=False, SPAD=True) # fig 2
 
-    autoconv_opt = convolution_reader(I4D_K_opt, Rd, vecimage)
-    # autoconv_opt = correlation_reader(I4D_K_opt, Rd)
-    autoconv = convolution_reader(I4D_K, Rd, vecimage)
-    # autoconv = correlation_reader(I4D_K, Rd)
+    if Nset == 1:
+        autoconv_opt = correlation_reader(I4D_K_opt, Rd)
+        autoconv = correlation_reader(I4D_K, Rd)
+    else:
+        autoconv_opt = convolution_reader(I4D_K_opt, Rd, vecimage)
+        autoconv = convolution_reader(I4D_K, Rd, vecimage)
 
     half_box = 6 // 2
 
@@ -97,6 +99,17 @@ def plot_EPR_SPAD():
     K_avg_sigma_l1, _, _, _, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autoconv_opt, window_size=window_size, show=False, SPAD=True)
     P_avg_sigma_l1, _, _, _, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(autocorr_opt, window_size=window_size, show=False, SPAD=True)
 
+    # mask = np.zeros_like(autoconv)
+    # row, col = np.unravel_index(autoconv.argmax(), autoconv.shape)
+    # mask[row, col] = 1
+    # mask_autoconv = autoconv * mask
+    # K_avg_sigma_opt, _, _, _, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(mask_autoconv, window_size=window_size, show=True, SPAD=True)
+    # mask = np.zeros_like(autocorr)
+    # row, col = np.unravel_index(autocorr.argmax(), autocorr.shape)
+    # mask[row, col] = 1
+    # mask_autocorr = autocorr * mask
+    # P_avg_sigma_opt, _, _, _, _, _ = DoubleGaussian.fit_2d_gaussian_windowed(mask_autocorr, window_size=window_size, show=True, SPAD=True)
+    #
 
     sigma_pos_m, sigma_mom_rad_per_m = utilities.convert_pixel_units(P_avg_sigma, K_avg_sigma,
                                                                           pixel_size_m=150e-6, wavelength_m=694e-9,
@@ -104,16 +117,22 @@ def plot_EPR_SPAD():
     sigma_pos_m_l1, sigma_mom_rad_per_m_l1 = utilities.convert_pixel_units(P_avg_sigma_l1, K_avg_sigma_l1,
                                                                                 pixel_size_m=150e-6, wavelength_m=694e-9,
                                                                                 focal_length_m=200e-3, M=(100/35, 300/35))
+    # sigma_pos_m_opt, sigma_mom_rad_per_m_opt = utilities.convert_pixel_units(P_avg_sigma_opt, K_avg_sigma_opt,
+    #                                                                             pixel_size_m=150e-6, wavelength_m=694e-9,
+    #                                                                             focal_length_m=200e-3, M=(100/35, 300/35))
 
     # Heisenberg EPR product (unitless, ~ hbar = 1)
     epr_product, _ = utilities.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
-    epr_product_l1, _ = utilities.epr_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
+    epr_product_l1, _ = utilities.epr_calc(sigma_pos_m_l1, sigma_mom_rad_per_m_l1, 0, 0)
+    # epr_product_opt, _ = utilities.epr_calc(sigma_pos_m_opt, sigma_mom_rad_per_m_opt, 0, 0)
 
     d, _ = utilities.dim_calc(sigma_pos_m, sigma_mom_rad_per_m, 0, 0)
     d_l1, _ = utilities.dim_calc(sigma_pos_m_l1, sigma_mom_rad_per_m_l1, 0, 0)
+    # d_opt, _ = utilities.dim_calc(sigma_pos_m_opt, sigma_mom_rad_per_m_opt, 0, 0)
 
     print(f'EPR = {epr_product} with dimensional witness {d}')
     print(f'EPR_l1 = {epr_product_l1} with dimensional witness {d_l1}')
+    # print(f'EPR_l1 = {epr_product_opt} with dimensional witness {d_opt}')
     plt.show()
 
     return
