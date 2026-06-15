@@ -17,7 +17,7 @@ def extract_number(filename):
 
 def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", epsilon=1e-10):
 
-    folder_path_K = 'SPAD figures/npj'
+    folder_path_K = 'npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
     Nset = 0  # 0 = autocorr, 1 = autocorr
     fpath = os.path.join(folder_path_K, file_names[Nset])
@@ -59,14 +59,13 @@ def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", 
         "ps.fonttype": 42,
     })
 
-    fig = plt.figure(figsize=(6.6, 5.2), constrained_layout=True)
-    gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 0.05])
+    fig = plt.figure(figsize=(6.6, 5.2), constrained_layout=False)
+    gs = fig.add_gridspec(2, 2, width_ratios=[1, 1])
 
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[0, 1])
     ax_c = fig.add_subplot(gs[1, 0])
     ax_d = fig.add_subplot(gs[1, 1])
-    cax = fig.add_subplot(gs[:, 2])
 
     axes = [ax_a, ax_b, ax_c, ax_d]
     labels = ["a", "b", "c", "d"]
@@ -100,11 +99,27 @@ def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", 
             fontweight="bold",
             color="white",
             va="top",
-            bbox=dict(facecolor="black", alpha=0.45, edgecolor="none", pad=1.5),
         )
+    # remove y tick labels from right column: b and d
+    axes[1].tick_params(labelleft=False)
+    axes[3].tick_params(labelleft=False)
 
+    # remove x tick labels from top row: a and b
+    axes[0].tick_params(labelbottom=False)
+    axes[1].tick_params(labelbottom=False)
+
+    fig.subplots_adjust(
+        left=0.08,
+        right=0.84,
+        bottom=0.12,
+        top=0.95,
+        wspace=0.1,
+        hspace=-0.5
+    )
+
+    cax = fig.add_axes([0.87, 0.3, 0.025, 0.47])
     cbar = fig.colorbar(last_im, cax=cax)
-    cbar.set_label(r"Coincidence [arb. units]", fontsize=9)
+    cbar.set_label(r"Projected Coincidence amp. [arb. units]", fontsize=9)
     cbar.ax.tick_params(labelsize=7)
 
     fig.savefig(save_path, dpi=600, bbox_inches="tight")
@@ -115,7 +130,7 @@ def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", 
     return fig, axes
 
 def plot_SPAD_SNR(lambda_power):
-    folder_path_K = 'SPAD figures/npj'
+    folder_path_K = 'npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
     Nset = 0 # 0 = autocorr, 1 = autocorr
     DXW, DYW = 32, 64
@@ -165,7 +180,7 @@ def plot_SPAD_SNR(lambda_power):
     plt.show(block=True)
 
 def plot_EPR_SPAD(lambda_power, learning_rate=10 ** -4):
-    folder_path_K = 'SPAD figures/npj'
+    folder_path_K = 'npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
     DXW, DYW = 32, 64
     vecimage = np.linspace(0, DYW * DXW, DYW * DXW + 1)
@@ -251,12 +266,12 @@ def spectral_decomposition(cov):
     sorted_eigenvectors = eigenvectors[:, sorted_indices]
     return sorted_eigenvectors, sorted_eigenvalues
 
-def plot_fig4(
+def plot_fig5(
     lambda_power,
-    save_path="SPAD figures/Fig_4.pdf",
+    save_path="SPAD figures/Fig_5.pdf",
     use_abs=False,
 ):
-    folder_path_K = 'SPAD figures/npj'
+    folder_path_K = 'npj'
     file_names = sorted(
         [f for f in os.listdir(folder_path_K) if f.endswith('.mat')],
         key=extract_number
@@ -302,7 +317,7 @@ def plot_fig4(
         "ps.fonttype": 42,
     })
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.2))
+    fig, axes = plt.subplots(2, 2, figsize=(8.0, 5), constrained_layout=False)
 
     axes = axes.ravel()
 
@@ -344,13 +359,20 @@ def plot_fig4(
         )
         cbar.set_label("Eigenmode amp. [arb. units]", fontsize=9)
         cbar.ax.tick_params(labelsize=8)
+    # remove y tick labels from right column: b and d
+    axes[1].tick_params(labelleft=False)
+    axes[3].tick_params(labelleft=False)
+
+    # remove x tick labels from top row: a and b
+    axes[0].tick_params(labelbottom=False)
+    axes[1].tick_params(labelbottom=False)
 
     fig.subplots_adjust(
         left=0.10,
         right=0.96,
         bottom=0.12,
         top=0.90,
-        wspace=0.45,
+        wspace=0.5,
         hspace=0.45,
     )
 
@@ -362,7 +384,7 @@ def plot_fig4(
 
 if __name__ == "__main__":
     lambda_power = -9.4
-    plot_fig3(lambda_power)
-    plot_fig4(lambda_power)
+    # plot_fig3(lambda_power)
+    plot_fig5(lambda_power)
     # plot_SPAD_SNR(lambda_power)
     plot_EPR_SPAD(lambda_power)
