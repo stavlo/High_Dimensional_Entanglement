@@ -15,7 +15,7 @@ def extract_number(filename):
     match = re.search(r'_(\d+)\.mat$', filename)
     return int(match.group(1)) if match else float('inf')
 
-def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", epsilon=1e-10):
+def plot_fig3(lambda_power, ref_xy=(16,25), save_path="Fig_3.pdf", epsilon=1e-10):
 
     folder_path_K = 'npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
@@ -266,11 +266,7 @@ def spectral_decomposition(cov):
     sorted_eigenvectors = eigenvectors[:, sorted_indices]
     return sorted_eigenvectors, sorted_eigenvalues
 
-def plot_fig5(
-    lambda_power,
-    save_path="SPAD figures/Fig_5.pdf",
-    use_abs=False,
-):
+def plot_fig5(lambda_power, save_path="Fig_5.pdf", use_abs=False):
     folder_path_K = 'npj'
     file_names = sorted(
         [f for f in os.listdir(folder_path_K) if f.endswith('.mat')],
@@ -384,7 +380,7 @@ def plot_fig5(
 
 if __name__ == "__main__":
     lambda_power = -9.4
-    # plot_fig3(lambda_power)
+    plot_fig3(lambda_power)
     plot_fig5(lambda_power)
     # plot_SPAD_SNR(lambda_power)
     plot_EPR_SPAD(lambda_power)
