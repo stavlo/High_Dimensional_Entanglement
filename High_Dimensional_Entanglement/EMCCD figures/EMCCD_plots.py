@@ -571,14 +571,12 @@ def plot_fig2(folder_path_K, folder_path_P, dataset, save_path="Fig_2.pdf"):
     N, SNR_K, SNR_K_opt = plot_SNR(folder_path_K, dataset)
     N, SNR_P, SNR_P_opt = plot_SNR(folder_path_P, dataset)
 
-    img, img_opt = plot_sum_coordination(folder_path_K, dataset, selected_img=4)
-
-    n = len(SNR_K)
+    image_index = 4
+    img, img_opt = plot_sum_coordination(folder_path_K, dataset, selected_img=image_index)
 
     x = np.asarray(N)
     xlabel = "# of Acquired frames"
 
-    image_index = n // 2
 
     x_mark = x[image_index]
 
