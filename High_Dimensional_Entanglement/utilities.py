@@ -76,12 +76,9 @@ def dataset_creation(folder_path, file_name, load_if_exists=True, proj='sum',win
             fpath = os.path.join(folder_path, fname)
             I4D_K = I4D_calc(fpath, DX, DY, normalize=False, shifted=False)
             # 90x90
-            # I4D_window = extract_ROI(I4D_K, (22, 112), (6, 96))
             I4D_window = extract_ROI(I4D_K, (21, 111), (5, 95))
-            opt_I4D_K, loss = optimization.optimize_x(I4D_window, 10**(-4.8), 0.0,learning_rate=10 ** -1.403 ,max_iter=100)
-            # opt_I4D_K, loss = optimization.optimize_x(I4D_window, 10 ** (-7.5), 0.0, learning_rate=10 ** 1.5,
-            #                                           max_iter=1000,
-            #                                           if_log=False, upper_triangular=True)
+            opt_I4D_K, loss = optimization.optimize_x(I4D_window, 10 ** (-7.4), 0.0, learning_rate=10 ** 1.5,
+                                                      max_iter=1000, upper_triangular=True)
             if proj=='sum':
                 autoconv_l1 = convolution_reader(opt_I4D_K, Rd, vecimage)
                 autoconv = convolution_reader(I4D_window, Rd, vecimage)
@@ -154,11 +151,7 @@ if __name__ == "__main__":
     folder_path_P = r"C:\Users\lotanstav\Desktop\Hugo_888_code\exp_final\NearField"
     folder_path_K = r"C:\Users\lotanstav\Desktop\Hugo_888_code\exp_final\FarField"
 
-    # # # dataset pass
-    # folder_path_K = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/FarField'
-    # folder_path_P = f'C:/Users/lotanstav/Desktop/Hugo_888_code/short_exp/NearField'
-
     # creating the dataset from covariance matrices
-    dataset_creation(folder_path_P, 'l1_total_corr_wandb_window_100i_3.pkl', load_if_exists=True, proj='minus')
-    dataset_creation(folder_path_K, 'l1_total_corr_wandb_window_100i_3.pkl', load_if_exists=True, proj='sum')
+    dataset_creation(folder_path_P, 'test_7_4_final.pkl', load_if_exists=True, proj='minus')
+    dataset_creation(folder_path_K, 'test_7_4_final.pkl', load_if_exists=True, proj='sum')
 
