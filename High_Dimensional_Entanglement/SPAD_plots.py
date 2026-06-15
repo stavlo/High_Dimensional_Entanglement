@@ -114,7 +114,7 @@ def plot_fig3(lambda_power, ref_xy=(16,25), save_path="SPAD figures/Fig_3.pdf", 
 
     return fig, axes
 
-def plot_SPAD_visibility(lambda_power):
+def plot_SPAD_SNR(lambda_power):
     folder_path_K = 'SPAD figures/npj'
     file_names = sorted([f for f in os.listdir(folder_path_K) if f.endswith('.mat')], key=extract_number)
     Nset = 0 # 0 = autocorr, 1 = autocorr
@@ -364,5 +364,5 @@ if __name__ == "__main__":
     lambda_power = -9.4
     plot_fig3(lambda_power)
     plot_fig4(lambda_power)
-    # plot_SPAD_visibility(lambda_power)
+    # plot_SPAD_SNR(lambda_power)
     plot_EPR_SPAD(lambda_power)
